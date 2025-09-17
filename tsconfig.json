@@ -15,8 +15,7 @@
     "noEmit": false,
     "declaration": true,
     "declarationDir": "dist",
-    "outDir": "dist",
-    "jsx": "react-jsx"
+    "outDir": "dist"
   },
   "include": [
     "src"

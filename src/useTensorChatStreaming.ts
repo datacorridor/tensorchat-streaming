@@ -1,45 +1,77 @@
-import { useRef, useCallback, useEffect } from 'react';
 import { TensorChatStreaming } from './TensorChatStreaming';
 import { StreamRequest, StreamCallbacks, TensorChatConfig } from './types';
 
 /**
- * React hook for TensorChat streaming
+ * Framework-agnostic TensorChat streaming client manager
+ * This replaces the React hook with a generic class-based approach
  */
-export function useTensorChatStreaming(config: TensorChatConfig) {
-  const clientRef = useRef<TensorChatStreaming | null>(null);
+export class TensorChatStreamingManager {
+  private client: TensorChatStreaming | null = null;
+  private config: TensorChatConfig;
 
-  // Initialize client
-  useEffect(() => {
-    clientRef.current = new TensorChatStreaming(config);
-    
-    return () => {
-      clientRef.current?.destroy();
-    };
-  }, [config.apiKey, config.baseUrl, config.throttleMs]);
+  constructor(config: TensorChatConfig) {
+    this.config = config;
+    this.initialize();
+  }
 
-  const streamProcess = useCallback(
-    (request: StreamRequest, callbacks: StreamCallbacks = {}) => {
-      if (!clientRef.current) {
-        throw new Error('TensorChat client not initialized');
-      }
-      return clientRef.current.streamProcess(request, callbacks);
-    },
-    []
-  );
+  private initialize(): void {
+    if (this.client) {
+      this.client.destroy();
+    }
+    this.client = new TensorChatStreaming(this.config);
+  }
 
-  const processSingle = useCallback(
-    (request: StreamRequest) => {
-      if (!clientRef.current) {
-        throw new Error('TensorChat client not initialized');
-      }
-      return clientRef.current.processSingle(request);
-    },
-    []
-  );
+  /**
+   * Update configuration and reinitialize client
+   */
+  updateConfig(newConfig: Partial<TensorChatConfig>): void {
+    this.config = { ...this.config, ...newConfig };
+    this.initialize();
+  }
 
-  return {
-    streamProcess,
-    processSingle,
-    client: clientRef.current,
-  };
+  /**
+   * Stream process tensors with real-time callbacks
+   */
+  async streamProcess(request: StreamRequest, callbacks: StreamCallbacks = {}): Promise<void> {
+    if (!this.client) {
+      throw new Error('TensorChat client not initialized');
+    }
+    return this.client.streamProcess(request, callbacks);
+  }
+
+  /**
+   * Process a single tensor (non-streaming)
+   */
+  async processSingle(request: StreamRequest): Promise<any> {
+    if (!this.client) {
+      throw new Error('TensorChat client not initialized');
+    }
+    return this.client.processSingle(request);
+  }
+
+  /**
+   * Get the underlying client instance
+   */
+  getClient(): TensorChatStreaming | null {
+    return this.client;
+  }
+
+  /**
+   * Clean up resources
+   */
+  destroy(): void {
+    if (this.client) {
+      this.client.destroy();
+      this.client = null;
+    }
+  }
+}
+
+/**
+ * Factory function for creating a TensorChat streaming manager
+ * @param config - Configuration for the TensorChat client
+ * @returns A new TensorChatStreamingManager instance
+ */
+export function createTensorChatStreaming(config: TensorChatConfig): TensorChatStreamingManager {
+  return new TensorChatStreamingManager(config);
 }

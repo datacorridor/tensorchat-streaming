@@ -1,6 +1,15 @@
-# TensorChat Streaming
+# @tensorchat/streaming
 
-A TypeScript/JavaScript package for real-time streaming with Tensorchat.io cincurrent/tensor prompting.
+Framework-agnostic TypeScript/JavaScript client for Tensorchat.io streaming API. Process multiple LLM prompts concurrently with real-time streaming responses.
+
+## Features
+
+- 🚀 **Framework Agnostic**: Works with vanilla JS, React, Vue, Angular, Svelte, or any framework
+- 🔄 **Real-time Streaming**: Get live updates as tensors are processed
+- ⚡ **Concurrent Processing**: Handle multiple prompts simultaneously
+- 🎯 **TypeScript Support**: Fully typed for better developer experience
+- 🔧 **Configurable**: Throttling, custom endpoints, and more
+- 📦 **Lightweight**: No framework dependencies required
 
 ## Installation
 
@@ -41,26 +50,69 @@ await client.streamProcess(request, {
 });
 ```
 
-### React Hook
+### React Usage (Recommended)
+
+Basic React integration with the framework-agnostic package:
 
 ```jsx
-import { useTensorChatStreaming } from '@tensorchat/streaming';
+import React, { useEffect, useRef, useState } from 'react';
+import { createTensorChatStreaming } from '@tensorchat/streaming';
 
-function MyComponent() {
-  const { streamProcess } = useTensorChatStreaming({
-    apiKey: 'your-api-key'
-  });
+function TensorProcessor() {
+  const streamingClient = useRef(null);
+  const [results, setResults] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleStream = async () => {
-    await streamProcess(request, {
+  // Initialize streaming client
+  useEffect(() => {
+    streamingClient.current = createTensorChatStreaming({
+      apiKey: 'your-api-key'
+    });
+
+    return () => streamingClient.current?.destroy();
+  }, []);
+
+  const handleProcess = async () => {
+    setIsProcessing(true);
+    setResults([]);
+
+    await streamingClient.current.streamProcess({
+      content: "Your content here...",
+      tensors: [
+        { messages: "Summarize this" },
+        { messages: "Extract key points" }
+      ]
+    }, {
       onTensorChunk: (data) => {
-        // Update UI with streaming data
-        setResult(prev => prev + data.chunk);
+        // Update results in real-time
+        setResults(prev => {
+          const newResults = [...prev];
+          newResults[data.index] = (newResults[data.index] || '') + data.result?.chunk;
+          return newResults;
+        });
+      },
+      onComplete: () => setIsProcessing(false),
+      onError: (error) => {
+        console.error('Error:', error);
+        setIsProcessing(false);
       }
     });
   };
 
-  return <button onClick={handleStream}>Start Stream</button>;
+  return (
+    <div>
+      <button onClick={handleProcess} disabled={isProcessing}>
+        {isProcessing ? 'Processing...' : 'Start Processing'}
+      </button>
+      
+      {results.map((result, index) => (
+        <div key={index}>
+          <h3>Result {index + 1}</h3>
+          <p>{result}</p>
+        </div>
+      ))}
+    </div>
+  );
 }
 ```
 

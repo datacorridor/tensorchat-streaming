@@ -1,4 +1,4 @@
-# @tensorchat.io/streaming
+# Tensorchat Streaming Javascript Client
 
 Framework-agnostic TypeScript/JavaScript client for Tensorchat.io streaming API. Process multiple LLM prompts concurrently with real-time streaming responses.
 
@@ -175,4 +175,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Tensorchat.io is a product of Data Corridor Limited**
 
-**Made with ❤️ for the Python AI community**
+**Made with ❤️ for the AI community**

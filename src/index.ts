@@ -1,12 +1,12 @@
-export { TensorChatStreaming } from './TensorChatStreaming';
+export { TensorchatStreaming } from './TensorchatStreaming';
 export { 
-  TensorChatStreamingManager, 
-  createTensorChatStreaming
-} from './useTensorChatStreaming';
+  TensorchatStreamingManager, 
+  createTensorchatStreaming
+} from './useTensorchatStreaming';
 export type {
   TensorConfig,
   StreamRequest,
   StreamEventData,
   StreamCallbacks,
-  TensorChatConfig,
+  TensorchatConfig,
 } from './types';

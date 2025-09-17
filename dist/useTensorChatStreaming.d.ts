@@ -1,18 +1,18 @@
-import { TensorChatStreaming } from './TensorChatStreaming';
-import { StreamRequest, StreamCallbacks, TensorChatConfig } from './types';
+import { TensorchatStreaming } from './TensorchatStreaming';
+import { StreamRequest, StreamCallbacks, TensorchatConfig } from './types';
 /**
- * Framework-agnostic TensorChat streaming client manager
+ * Framework-agnostic Tensorchat streaming client manager
  * This replaces the React hook with a generic class-based approach
  */
-export declare class TensorChatStreamingManager {
+export declare class TensorchatStreamingManager {
     private client;
     private config;
-    constructor(config: TensorChatConfig);
+    constructor(config: TensorchatConfig);
     private initialize;
     /**
      * Update configuration and reinitialize client
      */
-    updateConfig(newConfig: Partial<TensorChatConfig>): void;
+    updateConfig(newConfig: Partial<TensorchatConfig>): void;
     /**
      * Stream process tensors with real-time callbacks
      */
@@ -24,15 +24,15 @@ export declare class TensorChatStreamingManager {
     /**
      * Get the underlying client instance
      */
-    getClient(): TensorChatStreaming | null;
+    getClient(): TensorchatStreaming | null;
     /**
      * Clean up resources
      */
     destroy(): void;
 }
 /**
- * Factory function for creating a TensorChat streaming manager
- * @param config - Configuration for the TensorChat client
- * @returns A new TensorChatStreamingManager instance
+ * Factory function for creating a Tensorchat streaming manager
+ * @param config - Configuration for the Tensorchat client
+ * @returns A new TensorchatStreamingManager instance
  */
-export declare function createTensorChatStreaming(config: TensorChatConfig): TensorChatStreamingManager;
+export declare function createTensorchatStreaming(config: TensorchatConfig): TensorchatStreamingManager;

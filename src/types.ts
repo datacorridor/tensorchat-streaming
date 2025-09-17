@@ -39,7 +39,7 @@ export interface StreamCallbacks {
   onError?: (error: Error) => void;
 }
 
-export interface TensorChatConfig {
+export interface TensorchatConfig {
   apiKey: string;
   baseUrl?: string;
   throttleMs?: number;

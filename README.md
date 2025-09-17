@@ -28,9 +28,9 @@ npm install @tensorchat.io/streaming
 ### Basic Streaming
 
 ```javascript
-import { TensorChatStreaming } from '@tensorchat.io/streaming';
+import { TensorchatStreaming } from '@tensorchat.io/streaming';
 
-const client = new TensorChatStreaming({
+const client = new TensorchatStreaming({
   apiKey: 'your-api-key',
   baseUrl: 'https://api.tensorchat.ai', // optional
   throttleMs: 50 // optional, default 50ms
@@ -62,7 +62,7 @@ Basic React integration with the framework-agnostic package:
 
 ```jsx
 import React, { useEffect, useRef, useState } from 'react';
-import { createTensorChatStreaming } from '@tensorchat.io/streaming';
+import { createTensorchatStreaming } from '@tensorchat.io/streaming';
 
 function TensorProcessor() {
   const streamingClient = useRef(null);
@@ -71,7 +71,7 @@ function TensorProcessor() {
 
   // Initialize streaming client
   useEffect(() => {
-    streamingClient.current = createTensorChatStreaming({
+    streamingClient.current = createTensorchatStreaming({
       apiKey: 'your-api-key'
     });
 
@@ -124,13 +124,13 @@ function TensorProcessor() {
 
 ## API Reference
 
-### TensorChatStreaming
+### TensorchatStreaming
 
 Main streaming client class.
 
 #### Constructor Options
 
-- `apiKey`: Your TensorChat API key
+- `apiKey`: Your Tensorchat API key
 - `baseUrl`: API base URL (optional)
 - `throttleMs`: Throttle interval for chunk updates (optional, default 50ms)
 

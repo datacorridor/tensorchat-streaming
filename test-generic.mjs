@@ -1,12 +1,12 @@
-// Test the framework-agnostic TensorChat streaming package
-import { createTensorChatStreaming, TensorChatStreaming } from './dist/index.esm.js';
+// Test the framework-agnostic Tensorchat streaming package
+import { createTensorchatStreaming, TensorchatStreaming } from './dist/index.esm.js';
 
-console.log('Testing framework-agnostic TensorChat streaming package...');
+console.log('Testing framework-agnostic Tensorchat streaming package...');
 
 // Test 1: Direct client instantiation
 console.log('\n1. Testing direct client instantiation...');
 try {
-  const client = new TensorChatStreaming({
+  const client = new TensorchatStreaming({
     apiKey: 'test-key',
     baseUrl: 'https://api.tensorchat.ai',
     throttleMs: 100
@@ -20,7 +20,7 @@ try {
 // Test 2: Framework-agnostic manager
 console.log('\n2. Testing framework-agnostic manager...');
 try {
-  const streaming = createTensorChatStreaming({
+  const streaming = createTensorchatStreaming({
     apiKey: 'test-key',
     baseUrl: 'https://api.tensorchat.ai',
     throttleMs: 50
@@ -44,8 +44,8 @@ try {
 // Test 3: React hook (should fail gracefully without React)
 console.log('\n3. Testing React hook without React...');
 try {
-  const { useTensorChatStreaming } = await import('./dist/index.esm.js');
-  useTensorChatStreaming({ apiKey: 'test-key' });
+  const { useTensorchatStreaming } = await import('./dist/index.esm.js');
+  useTensorchatStreaming({ apiKey: 'test-key' });
   console.log('❌ React hook should have failed without React');
 } catch (error) {
   console.log('✅ React hook correctly failed without React:', error.message);

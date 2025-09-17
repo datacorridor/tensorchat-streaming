@@ -69,8 +69,8 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
-var TensorChatStreaming = /** @class */ (function () {
-    function TensorChatStreaming(config) {
+var TensorchatStreaming = /** @class */ (function () {
+    function TensorchatStreaming(config) {
         this.throttleTimers = new Map();
         this.apiKey = config.apiKey;
         this.baseUrl = config.baseUrl || 'https://api.tensorchat.ai';
@@ -79,7 +79,7 @@ var TensorChatStreaming = /** @class */ (function () {
     /**
      * Throttle function calls to prevent UI flooding
      */
-    TensorChatStreaming.prototype.throttle = function (key, fn) {
+    TensorchatStreaming.prototype.throttle = function (key, fn) {
         var _this = this;
         var args = [];
         for (var _i = 2; _i < arguments.length; _i++) {
@@ -97,7 +97,7 @@ var TensorChatStreaming = /** @class */ (function () {
     /**
      * Stream process tensors with real-time callbacks
      */
-    TensorChatStreaming.prototype.streamProcess = function (request_1) {
+    TensorchatStreaming.prototype.streamProcess = function (request_1) {
         return __awaiter(this, arguments, void 0, function (request, callbacks) {
             var onStart, onProgress, onSearchProgress, onSearchComplete, onTensorChunk, onTensorComplete, onTensorError, onComplete, onError, response, reader, decoder, buffer, _a, done, value, lineEnd, line, data, error_1;
             var _b, _c;
@@ -213,7 +213,7 @@ var TensorChatStreaming = /** @class */ (function () {
     /**
      * Process a single tensor (non-streaming)
      */
-    TensorChatStreaming.prototype.processSingle = function (request) {
+    TensorchatStreaming.prototype.processSingle = function (request) {
         return __awaiter(this, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
@@ -240,45 +240,45 @@ var TensorChatStreaming = /** @class */ (function () {
     /**
      * Clean up any pending throttled calls
      */
-    TensorChatStreaming.prototype.destroy = function () {
+    TensorchatStreaming.prototype.destroy = function () {
         this.throttleTimers.forEach(function (timerId) { return clearTimeout(timerId); });
         this.throttleTimers.clear();
     };
-    return TensorChatStreaming;
+    return TensorchatStreaming;
 }());
 
 /**
- * Framework-agnostic TensorChat streaming client manager
+ * Framework-agnostic Tensorchat streaming client manager
  * This replaces the React hook with a generic class-based approach
  */
-var TensorChatStreamingManager = /** @class */ (function () {
-    function TensorChatStreamingManager(config) {
+var TensorchatStreamingManager = /** @class */ (function () {
+    function TensorchatStreamingManager(config) {
         this.client = null;
         this.config = config;
         this.initialize();
     }
-    TensorChatStreamingManager.prototype.initialize = function () {
+    TensorchatStreamingManager.prototype.initialize = function () {
         if (this.client) {
             this.client.destroy();
         }
-        this.client = new TensorChatStreaming(this.config);
+        this.client = new TensorchatStreaming(this.config);
     };
     /**
      * Update configuration and reinitialize client
      */
-    TensorChatStreamingManager.prototype.updateConfig = function (newConfig) {
+    TensorchatStreamingManager.prototype.updateConfig = function (newConfig) {
         this.config = __assign(__assign({}, this.config), newConfig);
         this.initialize();
     };
     /**
      * Stream process tensors with real-time callbacks
      */
-    TensorChatStreamingManager.prototype.streamProcess = function (request_1) {
+    TensorchatStreamingManager.prototype.streamProcess = function (request_1) {
         return __awaiter(this, arguments, void 0, function (request, callbacks) {
             if (callbacks === void 0) { callbacks = {}; }
             return __generator(this, function (_a) {
                 if (!this.client) {
-                    throw new Error('TensorChat client not initialized');
+                    throw new Error('Tensorchat client not initialized');
                 }
                 return [2 /*return*/, this.client.streamProcess(request, callbacks)];
             });
@@ -287,11 +287,11 @@ var TensorChatStreamingManager = /** @class */ (function () {
     /**
      * Process a single tensor (non-streaming)
      */
-    TensorChatStreamingManager.prototype.processSingle = function (request) {
+    TensorchatStreamingManager.prototype.processSingle = function (request) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 if (!this.client) {
-                    throw new Error('TensorChat client not initialized');
+                    throw new Error('Tensorchat client not initialized');
                 }
                 return [2 /*return*/, this.client.processSingle(request)];
             });
@@ -300,27 +300,27 @@ var TensorChatStreamingManager = /** @class */ (function () {
     /**
      * Get the underlying client instance
      */
-    TensorChatStreamingManager.prototype.getClient = function () {
+    TensorchatStreamingManager.prototype.getClient = function () {
         return this.client;
     };
     /**
      * Clean up resources
      */
-    TensorChatStreamingManager.prototype.destroy = function () {
+    TensorchatStreamingManager.prototype.destroy = function () {
         if (this.client) {
             this.client.destroy();
             this.client = null;
         }
     };
-    return TensorChatStreamingManager;
+    return TensorchatStreamingManager;
 }());
 /**
- * Factory function for creating a TensorChat streaming manager
- * @param config - Configuration for the TensorChat client
- * @returns A new TensorChatStreamingManager instance
+ * Factory function for creating a Tensorchat streaming manager
+ * @param config - Configuration for the Tensorchat client
+ * @returns A new TensorchatStreamingManager instance
  */
-function createTensorChatStreaming(config) {
-    return new TensorChatStreamingManager(config);
+function createTensorchatStreaming(config) {
+    return new TensorchatStreamingManager(config);
 }
 
-export { TensorChatStreaming, TensorChatStreamingManager, createTensorChatStreaming };
+export { TensorchatStreaming, TensorchatStreamingManager, createTensorchatStreaming };

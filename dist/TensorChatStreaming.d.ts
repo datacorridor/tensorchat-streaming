@@ -1,10 +1,10 @@
-import { StreamRequest, StreamCallbacks, TensorChatConfig } from './types';
-export declare class TensorChatStreaming {
+import { StreamRequest, StreamCallbacks, TensorchatConfig } from './types';
+export declare class TensorchatStreaming {
     private apiKey;
     private baseUrl;
     private throttleMs;
     private throttleTimers;
-    constructor(config: TensorChatConfig);
+    constructor(config: TensorchatConfig);
     /**
      * Throttle function calls to prevent UI flooding
      */

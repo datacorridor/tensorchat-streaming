@@ -1,4 +1,4 @@
-# @tensorchat/streaming
+# @tensorchat.io/streaming
 
 Framework-agnostic TypeScript/JavaScript client for Tensorchat.io streaming API. Process multiple LLM prompts concurrently with real-time streaming responses.
 
@@ -14,7 +14,7 @@ Framework-agnostic TypeScript/JavaScript client for Tensorchat.io streaming API.
 ## Installation
 
 ```bash
-npm install @tensorchat/streaming
+npm install @tensorchat.io/streaming
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ npm install @tensorchat/streaming
 ### Basic Streaming
 
 ```javascript
-import { TensorChatStreaming } from '@tensorchat/streaming';
+import { TensorChatStreaming } from '@tensorchat.io/streaming';
 
 const client = new TensorChatStreaming({
   apiKey: 'your-api-key',
@@ -56,7 +56,7 @@ Basic React integration with the framework-agnostic package:
 
 ```jsx
 import React, { useEffect, useRef, useState } from 'react';
-import { createTensorChatStreaming } from '@tensorchat/streaming';
+import { createTensorChatStreaming } from '@tensorchat.io/streaming';
 
 function TensorProcessor() {
   const streamingClient = useRef(null);

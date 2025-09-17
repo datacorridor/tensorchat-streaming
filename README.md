@@ -15,11 +15,11 @@ Framework-agnostic TypeScript/JavaScript client for Tensorchat.io streaming API.
 - **Configurable**: Throttling, custom endpoints, and more
 - **Lightweight**: No framework dependencies required
 
-## Models & API Access
+<!-- ## Models & API Access
 
 - **400+ Models Available**: Access over 400 language models through [Openrouter](https://openrouter.ai) integration
 - **API Key**: Obtain your API key from [tensorchat.io](https://tensorchat.io) to get started
-- **Multiple Providers**: Support for OpenAI, Anthropic, Google, and many other model providers through a unified interface
+- **Multiple Providers**: Support for OpenAI, Anthropic, Google, and many other model providers through a unified interface -->
 
 ## Installation
 

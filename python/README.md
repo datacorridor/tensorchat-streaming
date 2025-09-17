@@ -399,6 +399,7 @@ This demo demonstrates:
 ## 🔗 Links & Resources
 
 - **PyPI Package**: https://pypi.org/project/tensorchat-streaming/
+- **NPM Package**: https://www.npmjs.com/package/@tensorchat.io/streaming
 - **GitHub Repository**: https://github.com/datacorridor/tensorchat-streaming
 - **Tensorchat Platform**: https://tensorchat.io
 - **API Documentation**: https://tensorchat.io/#api-docs

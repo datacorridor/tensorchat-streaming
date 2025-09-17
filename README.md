@@ -4,12 +4,12 @@ Framework-agnostic TypeScript/JavaScript client for Tensorchat.io streaming API.
 
 ## Features
 
-- 🚀 **Framework Agnostic**: Works with vanilla JS, React, Vue, Angular, Svelte, or any framework
-- 🔄 **Real-time Streaming**: Get live updates as tensors are processed
-- ⚡ **Concurrent Processing**: Handle multiple prompts simultaneously
-- 🎯 **TypeScript Support**: Fully typed for better developer experience
-- 🔧 **Configurable**: Throttling, custom endpoints, and more
-- 📦 **Lightweight**: No framework dependencies required
+- **Framework Agnostic**: Works with vanilla JS, React, Vue, Angular, Svelte, or any framework
+- **Real-time Streaming**: Get live updates as tensors are processed
+- **Concurrent Processing**: Handle multiple prompts simultaneously
+- **TypeScript Support**: Fully typed for better developer experience
+- **Configurable**: Throttling, custom endpoints, and more
+- **Lightweight**: No framework dependencies required
 
 ## Models & API Access
 

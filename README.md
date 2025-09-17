@@ -1,5 +1,9 @@
 # Tensorchat Streaming Javascript Client
 
+[![NPM version](https://badge.fury.io/js/@tensorchat.io%2Fstreaming.svg)](https://badge.fury.io/js/@tensorchat.io%2Fstreaming)
+[![Node.js 14+](https://img.shields.io/badge/node.js-14+-blue.svg)](https://nodejs.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Framework-agnostic TypeScript/JavaScript client for Tensorchat.io streaming API. Process multiple LLM prompts concurrently with real-time streaming responses.
 
 ## Features

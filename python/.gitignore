@@ -157,3 +157,38 @@ cython_debug/
 #  be added to the global gitignore or merged into this project gitignore.  For a PyCharm
 #  project, it is recommended to ignore the entire idea/ directory.
 .idea/
+
+# Virtual environment folders (Python installations)
+Lib/
+Scripts/
+Include/
+pyvenv.cfg
+
+# IDE and editors
+.vscode/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+
+# Local development files
+dev/
+temp/
+tmp/
+
+# API keys and secrets
+.env.local
+.env.production
+secrets.txt
+api_keys.txt
+
+# Publishing utilities (optional - remove if you want to keep them)
+publish.py
+PUBLISHING.md

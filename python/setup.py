@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="tensorchat-streaming",
-    version="1.0.0",
+    version="1.0.1",
     author="Tensorchat.io",
     author_email="support@tensorchat.io",
     description="Framework-agnostic Python client for Tensorchat.io streaming API",
@@ -27,7 +27,6 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",

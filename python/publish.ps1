@@ -41,7 +41,7 @@ function Write-Error { param($Message) Write-Host "❌ $Message" -ForegroundColo
 
 # Main function
 function Main {
-    Write-Host "🚀 TensorChat Streaming - Automated Publishing Script" -ForegroundColor Cyan
+    Write-Host "🚀 Tensorchat Streaming - Automated Publishing Script" -ForegroundColor Cyan
     Write-Host "=" * 60 -ForegroundColor Cyan
     
     try {

@@ -1,4 +1,4 @@
-# 📦 Publishing Guide for TensorChat Streaming
+# 📦 Publishing Guide for Tensorchat Streaming
 
 This guide explains how to publish new versions of the `tensorchat-streaming` package to PyPI.
 

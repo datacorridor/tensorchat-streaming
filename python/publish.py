@@ -183,7 +183,7 @@ def main():
     parser.add_argument("--skip-cleanup", action="store_true", help="Skip cleanup of build artifacts")
     args = parser.parse_args()
     
-    print("🚀 TensorChat Streaming - Automated Publishing Script")
+    print("🚀 Tensorchat Streaming - Automated Publishing Script")
     print("=" * 60)
     
     try:

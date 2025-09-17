@@ -303,7 +303,7 @@ async def test_large_scale_request():
 async def main():
     """Run all multi-tensor tests."""
     
-    print("TensorChat Streaming - MULTI-TENSOR COMPLETE RESULTS")
+    print("Tensorchat Streaming - MULTI-TENSOR COMPLETE RESULTS")
     print("=" * 80)
     print("🎯 This demo shows complete results from multiple concurrent tensors")
     print("📊 Watch as tensors are processed simultaneously and see full outputs")

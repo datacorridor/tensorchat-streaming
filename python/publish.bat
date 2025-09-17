@@ -2,11 +2,11 @@
 setlocal enabledelayedexpansion
 
 REM =================================================================
-REM TensorChat Streaming - Simple Publishing Script
+REM Tensorchat Streaming - Simple Publishing Script
 REM =================================================================
 
 echo.
-echo 🚀 TensorChat Streaming - Publishing to PyPI
+echo 🚀 Tensorchat Streaming - Publishing to PyPI
 echo =================================================================
 
 REM Check if we're in the right directory

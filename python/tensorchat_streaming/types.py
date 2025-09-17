@@ -100,7 +100,7 @@ class TensorchatConfig:
     def __post_init__(self):
         """Set default values after initialization."""
         if self.base_url is None:
-            self.base_url = "https://api.tensorchat.ai"
+            self.base_url = "https://api.tensorchat.io"
         if self.throttle_ms is None:
             self.throttle_ms = 50
 

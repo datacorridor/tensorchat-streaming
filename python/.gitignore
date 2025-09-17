@@ -189,6 +189,5 @@ tmp/
 secrets.txt
 api_keys.txt
 
-# Publishing utilities (optional - remove if you want to keep them)
-publish.py
-PUBLISHING.md
+# Publishing temporary files
+venv_publish/

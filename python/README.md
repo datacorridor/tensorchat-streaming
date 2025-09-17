@@ -1,12 +1,12 @@
-# TensorChat Streaming Python Client
+# Tensorchat Streaming Python Client
 
 [![PyPI version](https://badge.fury.io/py/tensorchat-streaming.svg)](https://badge.fury.io/py/tensorchat-streaming)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Framework-agnostic Python client for TensorChat.io streaming API. Process multiple LLM prompts concurrently with real-time streaming responses using async/await patterns.
+Framework-agnostic Python client for Tensorchat.io streaming API. Process multiple LLM prompts concurrently with real-time streaming responses using async/await patterns.
 
-## Features
+## ✨ Features
 
 - **Framework Agnostic**: Works with asyncio, FastAPI, Django, Flask, or any Python framework
 - **Real-time Streaming**: Get live updates as tensors are processed with async streaming
@@ -16,7 +16,7 @@ Framework-agnostic Python client for TensorChat.io streaming API. Process multip
 - **Lightweight**: Minimal dependencies (only aiohttp required)
 - **Multi-Tensor Support**: Process up to 8 concurrent tensor requests
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Installation
 
@@ -85,7 +85,7 @@ from tensorchat_streaming import TensorchatStreaming, TensorchatConfig, StreamRe
 import asyncio
 import json
 
-app = FastAPI(title="TensorChat Streaming API")
+app = FastAPI(title="Tensorchat Streaming API")
 
 # Initialize configuration
 config = TensorchatConfig(api_key="your-api-key")
@@ -304,7 +304,7 @@ Framework-agnostic manager class for easier lifecycle management.
 ```python
 @dataclass
 class TensorchatConfig:
-    api_key: str                                    # Required: Your TensorChat API key
+    api_key: str                                    # Required: Your Tensorchat API key
     base_url: Optional[str] = "https://api.tensorchat.io"  # API endpoint
     throttle_ms: Optional[int] = 50                 # Throttling delay in milliseconds
 ```
@@ -400,8 +400,8 @@ This demo demonstrates:
 
 - **PyPI Package**: https://pypi.org/project/tensorchat-streaming/
 - **GitHub Repository**: https://github.com/datacorridor/tensorchat-streaming
-- **TensorChat Platform**: https://tensorchat.io
-- **API Documentation**: https://tensorchat.io/docs
+- **Tensorchat Platform**: https://tensorchat.io
+- **API Documentation**: https://tensorchat.io/#api-docs
 - **OpenRouter Models**: https://openrouter.ai/models
 
 ## 📝 License
@@ -411,13 +411,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## 🆘 Support & Contributing
 
 - **Issues**: [GitHub Issues](https://github.com/datacorridor/tensorchat-streaming/issues)
-- **Email**: support@tensorchat.io
-- **Documentation**: [tensorchat.io/docs](https://tensorchat.io/docs)
+- **Email**: support@datacorridor.io
+- **Documentation**: [tensorchat.io/#api-docs](https://tensorchat.io/#api-docs)
 
-### Contributing
-
-We welcome contributions! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
----
+**Tensorchat.io is a product of Data Corridor Limited**
 
 **Made with ❤️ for the Python AI community**

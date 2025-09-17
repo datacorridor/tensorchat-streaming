@@ -28,31 +28,31 @@ npm install @tensorchat.io/streaming
 ### Basic Streaming
 
 ```javascript
-import { TensorchatStreaming } from '@tensorchat.io/streaming';
+import { TensorchatStreaming } from "@tensorchat.io/streaming";
 
 const client = new TensorchatStreaming({
-  apiKey: 'your-api-key',
-  baseUrl: 'https://api.tensorchat.ai', // optional
-  throttleMs: 50 // optional, default 50ms
+  apiKey: "your-api-key",
+  baseUrl: "https://api.tensorchat.ai", // optional
+  throttleMs: 50, // optional, default 50ms
 });
 
 const request = {
-  context: 'Your context here',
-  model: 'google/gemini-2.5-flash-lite',
+  context: "Your context here",
+  model: "google/gemini-2.5-flash-lite",
   tensors: [
     {
-      messages: 'Your prompt',
+      messages: "Your prompt",
       concise: true,
-      search: false
-    }
-  ]
+      search: false,
+    },
+  ],
 };
 
 await client.streamProcess(request, {
-  onStart: (data) => console.log('Started:', data),
-  onTensorChunk: (data) => console.log('Chunk:', data.chunk),
-  onTensorComplete: (data) => console.log('Complete:', data),
-  onError: (error) => console.error('Error:', error)
+  onStart: (data) => console.log("Started:", data),
+  onTensorChunk: (data) => console.log("Chunk:", data.chunk),
+  onTensorComplete: (data) => console.log("Complete:", data),
+  onError: (error) => console.error("Error:", error),
 });
 ```
 
@@ -61,8 +61,8 @@ await client.streamProcess(request, {
 Basic React integration with the framework-agnostic package:
 
 ```jsx
-import React, { useEffect, useRef, useState } from 'react';
-import { createTensorchatStreaming } from '@tensorchat.io/streaming';
+import React, { useEffect, useRef, useState } from "react";
+import { createTensorchatStreaming } from "@tensorchat.io/streaming";
 
 function TensorProcessor() {
   const streamingClient = useRef(null);
@@ -72,7 +72,7 @@ function TensorProcessor() {
   // Initialize streaming client
   useEffect(() => {
     streamingClient.current = createTensorchatStreaming({
-      apiKey: 'your-api-key'
+      apiKey: "your-api-key",
     });
 
     return () => streamingClient.current?.destroy();
@@ -82,35 +82,39 @@ function TensorProcessor() {
     setIsProcessing(true);
     setResults([]);
 
-    await streamingClient.current.streamProcess({
-      content: "Your content here...",
-      tensors: [
-        { messages: "Summarize this" },
-        { messages: "Extract key points" }
-      ]
-    }, {
-      onTensorChunk: (data) => {
-        // Update results in real-time
-        setResults(prev => {
-          const newResults = [...prev];
-          newResults[data.index] = (newResults[data.index] || '') + data.result?.chunk;
-          return newResults;
-        });
+    await streamingClient.current.streamProcess(
+      {
+        content: "Your content here...",
+        tensors: [
+          { messages: "Summarize this" },
+          { messages: "Extract key points" },
+        ],
       },
-      onComplete: () => setIsProcessing(false),
-      onError: (error) => {
-        console.error('Error:', error);
-        setIsProcessing(false);
+      {
+        onTensorChunk: (data) => {
+          // Update results in real-time
+          setResults((prev) => {
+            const newResults = [...prev];
+            newResults[data.index] =
+              (newResults[data.index] || "") + data.result?.chunk;
+            return newResults;
+          });
+        },
+        onComplete: () => setIsProcessing(false),
+        onError: (error) => {
+          console.error("Error:", error);
+          setIsProcessing(false);
+        },
       }
-    });
+    );
   };
 
   return (
     <div>
       <button onClick={handleProcess} disabled={isProcessing}>
-        {isProcessing ? 'Processing...' : 'Start Processing'}
+        {isProcessing ? "Processing..." : "Start Processing"}
       </button>
-      
+
       {results.map((result, index) => (
         <div key={index}>
           <h3>Result {index + 1}</h3>
@@ -151,6 +155,24 @@ Main streaming client class.
 - `onComplete`: All tensors complete
 - `onError`: Fatal error occurred
 
-## License
+## 🔗 Links & Resources
 
-MIT
+- **PyPI Package**: https://pypi.org/project/tensorchat-streaming/
+- **GitHub Repository**: https://github.com/datacorridor/tensorchat-streaming
+- **Tensorchat Platform**: https://tensorchat.io
+- **API Documentation**: https://tensorchat.io/#api-docs
+- **OpenRouter Models**: https://openrouter.ai/models
+
+## 📝 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🆘 Support & Contributing
+
+- **Issues**: [GitHub Issues](https://github.com/datacorridor/tensorchat-streaming/issues)
+- **Email**: support@datacorridor.io
+- **Documentation**: [tensorchat.io/#api-docs](https://tensorchat.io/#api-docs)
+
+**Tensorchat.io is a product of Data Corridor Limited**
+
+**Made with ❤️ for the Python AI community**

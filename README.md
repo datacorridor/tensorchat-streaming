@@ -155,7 +155,7 @@ Main streaming client class.
 - `onComplete`: All tensors complete
 - `onError`: Fatal error occurred
 
-## 🔗 Links & Resources
+## Links & Resources
 
 - **PyPI Package**: https://pypi.org/project/tensorchat-streaming/
 - **NPM Package**: https://www.npmjs.com/package/@tensorchat.io/streaming
@@ -164,11 +164,11 @@ Main streaming client class.
 - **API Documentation**: https://tensorchat.io/#api-docs
 - **OpenRouter Models**: https://openrouter.ai/models
 
-## 📝 License
+## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 🆘 Support & Contributing
+## Support & Contributing
 
 - **Issues**: [GitHub Issues](https://github.com/datacorridor/tensorchat-streaming/issues)
 - **Email**: support@datacorridor.io

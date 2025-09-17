@@ -6,7 +6,7 @@
 
 Framework-agnostic Python client for Tensorchat.io streaming API. Process multiple LLM prompts concurrently with real-time streaming responses using async/await patterns.
 
-## ✨ Features
+## Features
 
 - **Framework Agnostic**: Works with asyncio, FastAPI, Django, Flask, or any Python framework
 - **Real-time Streaming**: Get live updates as tensors are processed with async streaming
@@ -16,7 +16,7 @@ Framework-agnostic Python client for Tensorchat.io streaming API. Process multip
 - **Lightweight**: Minimal dependencies (only aiohttp required)
 - **Multi-Tensor Support**: Process up to 8 concurrent tensor requests
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -67,14 +67,14 @@ async def main():
 asyncio.run(main())
 ```
 
-## 🌐 Models & API Access
+## Models & API Access
 
 - **400+ Models Available**: Access over 400 language models through [OpenRouter](https://openrouter.ai) integration
 - **API Key**: Obtain your API key from [tensorchat.io](https://tensorchat.io) to get started
 - **Multiple Providers**: Support for OpenAI, Anthropic, Google, Mistral, and many other providers through a unified interface
 - **Flexible Model Selection**: Choose different models per tensor or use a default model for all tensors
 
-## 🔧 Framework Integration Examples
+## Framework Integration Examples
 
 ### FastAPI Integration
 
@@ -166,7 +166,7 @@ class TensorStreamView(View):
             return JsonResponse({"result": result})
 ```
 
-## 🚦 Advanced Usage
+## Advanced Usage
 
 ### Multi-Tensor Concurrent Processing
 
@@ -180,7 +180,7 @@ class MultiTensorProcessor:
         self.buffers = {}
     
     def on_start(self, data):
-        print(f"🚀 Starting {data.total_tensors} tensors with {data.model}")
+        print(f"Starting {data.total_tensors} tensors with {data.model}")
         
     def on_tensor_chunk(self, data):
         if data.index not in self.buffers:
@@ -192,11 +192,11 @@ class MultiTensorProcessor:
             "content": self.buffers.get(data.index, ""),
             "metadata": data.result
         }
-        print(f"✅ Tensor {data.index + 1} completed")
+        print(f"Tensor {data.index + 1} completed")
         
     def on_complete(self, data):
-        print(f"🎉 All {data.total_tensors} tensors completed!")
-        print(f"📊 Total results: {len(self.results)}")
+        print(f"All {data.total_tensors} tensors completed!")
+        print(f"Total results: {len(self.results)}")
 
 async def process_multiple_tasks():
     config = TensorchatConfig(api_key="your-api-key")
@@ -254,16 +254,16 @@ async def robust_processing_with_retries():
                 )
                 
                 def on_error(error):
-                    print(f"❌ Processing error: {error}")
+                    print(f"Processing error: {error}")
                 
                 callbacks = StreamCallbacks(on_error=on_error)
                 result = await client.stream_process(request, callbacks)
                 return result
                 
         except Exception as e:
-            print(f"🔄 Attempt {attempt + 1} failed: {e}")
+            print(f"Attempt {attempt + 1} failed: {e}")
             if attempt == max_retries - 1:
-                print("❌ Max retries exceeded")
+                print("Max retries exceeded")
                 raise
             await asyncio.sleep(2 ** attempt)  # Exponential backoff
 
@@ -274,7 +274,7 @@ except Exception as e:
     print(f"Final error: {e}")
 ```
 
-## 📖 API Reference
+## API Reference
 
 ### TensorchatStreaming
 
@@ -361,7 +361,7 @@ class StreamCallbacks:
 - `total_tensors: int` - Total number of processed tensors
 - `results: List[dict]` - Complete results for all tensors
 
-## 🛠️ Development
+## Development
 
 ### Local Development Setup
 
@@ -396,7 +396,7 @@ This demo demonstrates:
 - Performance metrics and statistics
 - Error handling and recovery
 
-## 🔗 Links & Resources
+## Links & Resources
 
 - **PyPI Package**: https://pypi.org/project/tensorchat-streaming/
 - **NPM Package**: https://www.npmjs.com/package/@tensorchat.io/streaming
@@ -405,11 +405,11 @@ This demo demonstrates:
 - **API Documentation**: https://tensorchat.io/#api-docs
 - **OpenRouter Models**: https://openrouter.ai/models
 
-## 📝 License
+## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 🆘 Support & Contributing
+## Support & Contributing
 
 - **Issues**: [GitHub Issues](https://github.com/datacorridor/tensorchat-streaming/issues)
 - **Email**: support@datacorridor.io

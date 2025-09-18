@@ -3,74 +3,46 @@ import { StreamRequest, StreamEventData, StreamCallbacks, TensorchatConfig } fro
 export class TensorchatStreaming {
   private apiKey: string;
   private baseUrl: string;
-  private throttleMs: number;
-  private throttleTimers: Map<string, number> = new Map();
+  private verbose: boolean;
+  private tensorBuffers: Map<number, string[]> = new Map();
   private completedTensors: Set<number> = new Set();
 
   constructor(config: TensorchatConfig) {
     this.apiKey = config.apiKey;
     this.baseUrl = config.baseUrl || 'https://api.tensorchat.ai';
-    this.throttleMs = config.throttleMs || 50; // Default 50ms throttle
+    this.verbose = config.verbose ?? false; // Default to false
   }
 
   /**
-   * Throttle function calls to prevent UI flooding
+   * Ultra-fast buffer processing with minimal allocations
    */
-  private throttle<T extends any[]>(key: string, fn: (...args: T) => void, ...args: T): void {
-    if (this.throttleTimers.has(key)) {
-      clearTimeout(this.throttleTimers.get(key)!);
+  private processBuffer(buffer: string): { lines: string[], remainingBuffer: string } {
+    const lines: string[] = [];
+    let startIndex = 0;
+    
+    // Use indexOf with start position to avoid repeated string scanning
+    while (true) {
+      const lineEnd = buffer.indexOf('\n\n', startIndex);
+      if (lineEnd === -1) break;
+      
+      lines.push(buffer.slice(startIndex, lineEnd));
+      startIndex = lineEnd + 2;
     }
-
-    const timeoutId = window.setTimeout(() => {
-      // Double-check that the tensor hasn't completed before calling the function
-      const tensorIndex = key.startsWith('chunk-') ? parseInt(key.split('-')[1]) : -1;
-      if (tensorIndex === -1 || !this.completedTensors.has(tensorIndex)) {
-        fn(...args);
-      }
-      this.throttleTimers.delete(key);
-    }, this.throttleMs);
-
-    this.throttleTimers.set(key, timeoutId);
+    
+    return {
+      lines,
+      remainingBuffer: buffer.slice(startIndex)
+    };
   }
 
   /**
-   * Clear all pending throttled calls for a specific tensor
-   */
-  private clearTensorThrottles(tensorIndex: number): void {
-    const chunkKey = `chunk-${tensorIndex}`;
-    if (this.throttleTimers.has(chunkKey)) {
-      clearTimeout(this.throttleTimers.get(chunkKey)!);
-      this.throttleTimers.delete(chunkKey);
-    }
-  }
-
-  /**
-   * Process a tensor chunk immediately without throttling (for final chunks)
-   */
-  private processChunkImmediate(data: StreamEventData, onTensorChunk?: (data: StreamEventData) => void): void {
-    if (onTensorChunk && data.index !== undefined && !this.completedTensors.has(data.index)) {
-      onTensorChunk(data);
-    }
-  }
-
-  /**
-   * Stream process tensors with real-time callbacks
+   * Ultra-fast stream processing - buffers data and provides real-time UI updates
    */
   async streamProcess(
     request: StreamRequest,
     callbacks: StreamCallbacks = {}
   ): Promise<void> {
-    const {
-      onStart,
-      onProgress,
-      onSearchProgress,
-      onSearchComplete,
-      onTensorChunk,
-      onTensorComplete,
-      onTensorError,
-      onComplete,
-      onError
-    } = callbacks;
+    const { onSearchProgress, onSearchComplete, onTensorChunk, onTensorComplete, onComplete, onError } = callbacks;
 
     try {
       const response = await fetch(`${this.baseUrl}/streamProcess`, {
@@ -97,6 +69,7 @@ export class TensorchatStreaming {
       
       // Reset state for new stream
       this.completedTensors.clear();
+      this.tensorBuffers.clear();
 
       try {
         while (true) {
@@ -105,70 +78,80 @@ export class TensorchatStreaming {
 
           buffer += decoder.decode(value, { stream: true });
 
-          // Process complete lines
-          while (buffer.includes('\n\n')) {
-            const lineEnd = buffer.indexOf('\n\n');
-            const line = buffer.slice(0, lineEnd);
-            buffer = buffer.slice(lineEnd + 2);
+          // Process complete lines using optimized buffer processing
+          const { lines, remainingBuffer } = this.processBuffer(buffer);
+          buffer = remainingBuffer;
 
+          for (const line of lines) {
             if (line.startsWith('data: ')) {
               try {
                 const data: StreamEventData = JSON.parse(line.slice(6));
 
                 switch (data.type) {
-                  case 'start':
-                    console.log(`🚀 Starting ${data.totalTensors} tensors with ${data.model}`);
-                    onStart?.(data);
-                    break;
-
-                  case 'progress':
-                    console.log(`⏳ Processing tensor ${data.index}...`);
-                    onProgress?.(data);
-                    break;
-
                   case 'search_progress':
-                    console.log(`🔍 Searching for tensor ${data.index}...`);
                     onSearchProgress?.(data);
+                    if (this.verbose) {
+                      console.log(`🔍 Search progress for tensor ${data.index}`);
+                    }
                     break;
 
                   case 'search_complete':
-                    console.log(`✅ Search completed for tensor ${data.index}`);
                     onSearchComplete?.(data);
+                    if (this.verbose) {
+                      console.log(`✅ Search completed for tensor ${data.index}`);
+                    }
                     break;
 
                   case 'tensor_chunk':
-                    console.log(`📝 Tensor ${data.index} chunk received`);
-                    // Only process chunks for tensors that haven't completed
-                    if (onTensorChunk && data.index !== undefined && !this.completedTensors.has(data.index)) {
-                      this.throttle(`chunk-${data.index}`, onTensorChunk, data);
+                    // Ultra-fast buffering + optional UI streaming
+                    if (data.index !== undefined && data.chunk && !this.completedTensors.has(data.index)) {
+                      // Buffer chunks for complete callback
+                      if (!this.tensorBuffers.has(data.index)) {
+                        this.tensorBuffers.set(data.index, []);
+                      }
+                      this.tensorBuffers.get(data.index)!.push(data.chunk);
+                      
+                      // Optional real-time UI callback (no throttling for max speed)
+                      onTensorChunk?.(data);
+                      
+                      if (this.verbose) {
+                        console.log(`📝 Tensor ${data.index} chunk: ${data.chunk.length} chars`);
+                      }
                     }
                     break;
 
                   case 'tensor_complete':
-                    console.log(`✅ Tensor ${data.index} completed`);
                     if (data.index !== undefined) {
-                      // Clear any pending throttled chunks for this tensor
-                      this.clearTensorThrottles(data.index);
-                      // Process any final chunk immediately if present
-                      if (data.chunk && onTensorChunk && !this.completedTensors.has(data.index)) {
-                        this.processChunkImmediate(data, onTensorChunk);
-                      }
                       // Mark tensor as completed
                       this.completedTensors.add(data.index);
-                    }
-                    onTensorComplete?.(data);
-                    break;
+                      
+                      // Get all buffered data for this tensor
+                      const bufferedChunks = this.tensorBuffers.get(data.index) || [];
+                      const completeData = {
+                        ...data,
+                        streamBuffers: bufferedChunks,
+                        result: {
+                          ...data.result,
+                          content: bufferedChunks.join('')
+                        }
+                      };
 
-                  case 'tensor_error':
-                    console.warn(`❌ Tensor ${data.index} failed: ${data.result?.error}`);
-                    onTensorError?.(data);
+                      // Clean up buffer to save memory
+                      this.tensorBuffers.delete(data.index);
+
+                      // Call the guaranteed last callback
+                      onTensorComplete?.(completeData);
+                      
+                      if (this.verbose) {
+                        console.log(`✅ Tensor ${data.index} completed with ${bufferedChunks.length} chunks`);
+                      }
+                    }
                     break;
 
                   case 'complete':
-                    console.log(`🎉 All tensors completed!`);
-                    // Clear all remaining throttled calls
-                    this.throttleTimers.forEach(timerId => clearTimeout(timerId));
-                    this.throttleTimers.clear();
+                    if (this.verbose) {
+                      console.log(`🎉 All tensors completed!`);
+                    }
                     onComplete?.(data);
                     return;
 
@@ -177,7 +160,9 @@ export class TensorchatStreaming {
                     throw new Error(data.error || data.details || 'Streaming error');
                 }
               } catch (parseError) {
-                console.warn('Failed to parse streaming data:', line, parseError);
+                if (this.verbose) {
+                  console.warn('Failed to parse streaming data:', line, parseError);
+                }
               }
             }
           }
@@ -191,33 +176,32 @@ export class TensorchatStreaming {
     }
   }
 
+  // /**
+  //  * Process a single tensor (non-streaming)
+  //  */
+  // async processSingle(request: StreamRequest): Promise<any> {
+  //   const response = await fetch(`${this.baseUrl}/process`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${this.apiKey}`,
+  //       'x-api-key': this.apiKey,
+  //     },
+  //     body: JSON.stringify(request),
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  //   }
+
+  //   return response.json();
+  // }
+
   /**
-   * Process a single tensor (non-streaming)
-   */
-  async processSingle(request: StreamRequest): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/process`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
-        'x-api-key': this.apiKey,
-      },
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    return response.json();
-  }
-
-  /**
-   * Clean up any pending throttled calls
+   * Clean up any pending resources
    */
   destroy(): void {
-    this.throttleTimers.forEach(timerId => clearTimeout(timerId));
-    this.throttleTimers.clear();
     this.completedTensors.clear();
+    this.tensorBuffers.clear();
   }
 }

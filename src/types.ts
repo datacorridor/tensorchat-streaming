@@ -28,13 +28,10 @@ export interface StreamEventData {
 }
 
 export interface StreamCallbacks {
-  onStart?: (data: StreamEventData) => void;
-  onProgress?: (data: StreamEventData) => void;
   onSearchProgress?: (data: StreamEventData) => void;
   onSearchComplete?: (data: StreamEventData) => void;
   onTensorChunk?: (data: StreamEventData) => void;
   onTensorComplete?: (data: StreamEventData) => void;
-  onTensorError?: (data: StreamEventData) => void;
   onComplete?: (data: StreamEventData) => void;
   onError?: (error: Error) => void;
 }
@@ -42,5 +39,5 @@ export interface StreamCallbacks {
 export interface TensorchatConfig {
   apiKey: string;
   baseUrl?: string;
-  throttleMs?: number;
+  verbose?: boolean;
 }

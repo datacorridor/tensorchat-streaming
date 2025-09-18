@@ -42,12 +42,12 @@ export class TensorchatStreamingManager {
   /**
    * Process a single tensor (non-streaming)
    */
-  async processSingle(request: StreamRequest): Promise<any> {
-    if (!this.client) {
-      throw new Error('Tensorchat client not initialized');
-    }
-    return this.client.processSingle(request);
-  }
+  // async processSingle(request: StreamRequest): Promise<any> {
+  //   if (!this.client) {
+  //     throw new Error('Tensorchat client not initialized');
+  //   }
+  //   return this.client.processSingle(request);
+  // }
 
   /**
    * Get the underlying client instance

@@ -1,6 +1,6 @@
 ﻿{
   "name": "@tensorchat.io/streaming",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "description": "Framework-agnostic Tensorchat.io streaming client for concurrent LLM prompting",
   "main": "dist/index.js",

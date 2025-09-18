@@ -5,6 +5,7 @@ export class TensorchatStreaming {
   private baseUrl: string;
   private throttleMs: number;
   private throttleTimers: Map<string, number> = new Map();
+  private completedTensors: Set<number> = new Set();
 
   constructor(config: TensorchatConfig) {
     this.apiKey = config.apiKey;
@@ -21,11 +22,35 @@ export class TensorchatStreaming {
     }
 
     const timeoutId = window.setTimeout(() => {
-      fn(...args);
+      // Double-check that the tensor hasn't completed before calling the function
+      const tensorIndex = key.startsWith('chunk-') ? parseInt(key.split('-')[1]) : -1;
+      if (tensorIndex === -1 || !this.completedTensors.has(tensorIndex)) {
+        fn(...args);
+      }
       this.throttleTimers.delete(key);
     }, this.throttleMs);
 
     this.throttleTimers.set(key, timeoutId);
+  }
+
+  /**
+   * Clear all pending throttled calls for a specific tensor
+   */
+  private clearTensorThrottles(tensorIndex: number): void {
+    const chunkKey = `chunk-${tensorIndex}`;
+    if (this.throttleTimers.has(chunkKey)) {
+      clearTimeout(this.throttleTimers.get(chunkKey)!);
+      this.throttleTimers.delete(chunkKey);
+    }
+  }
+
+  /**
+   * Process a tensor chunk immediately without throttling (for final chunks)
+   */
+  private processChunkImmediate(data: StreamEventData, onTensorChunk?: (data: StreamEventData) => void): void {
+    if (onTensorChunk && data.index !== undefined && !this.completedTensors.has(data.index)) {
+      onTensorChunk(data);
+    }
   }
 
   /**
@@ -69,6 +94,9 @@ export class TensorchatStreaming {
 
       const decoder = new TextDecoder();
       let buffer = '';
+      
+      // Reset state for new stream
+      this.completedTensors.clear();
 
       try {
         while (true) {
@@ -110,14 +138,24 @@ export class TensorchatStreaming {
 
                   case 'tensor_chunk':
                     console.log(`📝 Tensor ${data.index} chunk received`);
-                    // Throttle chunk updates to prevent UI flooding
-                    if (onTensorChunk && data.index !== undefined) {
+                    // Only process chunks for tensors that haven't completed
+                    if (onTensorChunk && data.index !== undefined && !this.completedTensors.has(data.index)) {
                       this.throttle(`chunk-${data.index}`, onTensorChunk, data);
                     }
                     break;
 
                   case 'tensor_complete':
                     console.log(`✅ Tensor ${data.index} completed`);
+                    if (data.index !== undefined) {
+                      // Clear any pending throttled chunks for this tensor
+                      this.clearTensorThrottles(data.index);
+                      // Process any final chunk immediately if present
+                      if (data.chunk && onTensorChunk && !this.completedTensors.has(data.index)) {
+                        this.processChunkImmediate(data, onTensorChunk);
+                      }
+                      // Mark tensor as completed
+                      this.completedTensors.add(data.index);
+                    }
                     onTensorComplete?.(data);
                     break;
 
@@ -128,6 +166,9 @@ export class TensorchatStreaming {
 
                   case 'complete':
                     console.log(`🎉 All tensors completed!`);
+                    // Clear all remaining throttled calls
+                    this.throttleTimers.forEach(timerId => clearTimeout(timerId));
+                    this.throttleTimers.clear();
                     onComplete?.(data);
                     return;
 
@@ -177,5 +218,6 @@ export class TensorchatStreaming {
   destroy(): void {
     this.throttleTimers.forEach(timerId => clearTimeout(timerId));
     this.throttleTimers.clear();
+    this.completedTensors.clear();
   }
 }
